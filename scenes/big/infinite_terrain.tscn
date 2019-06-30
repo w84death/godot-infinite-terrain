@@ -1,0 +1,175 @@
+[gd_scene load_steps=19 format=2]
+
+[ext_resource path="res://code/infinite_terrain.gd" type="Script" id=1]
+[ext_resource path="res://scenes/small/clouds.tscn" type="PackedScene" id=2]
+[ext_resource path="res://code/camera_movement.gd" type="Script" id=3]
+[ext_resource path="res://materials/sand_blocks.material" type="Material" id=4]
+[ext_resource path="res://scenes/small/camera.tscn" type="PackedScene" id=5]
+[ext_resource path="res://materials/green.material" type="Material" id=6]
+[ext_resource path="res://scenes/small/amiga_ball.tscn" type="PackedScene" id=7]
+[ext_resource path="res://materials/water2.material" type="Material" id=8]
+[ext_resource path="res://materials/terrain_grass.material" type="Material" id=9]
+
+[sub_resource type="SphereMesh" id=1]
+material = ExtResource( 4 )
+radius = 0.5
+height = 1.0
+radial_segments = 32
+rings = 16
+
+[sub_resource type="ProceduralSky" id=2]
+sky_top_color = Color( 0.203922, 0.376471, 0.545098, 1 )
+sky_horizon_color = Color( 0.764706, 1, 0.996078, 1 )
+ground_bottom_color = Color( 0.321569, 0.65098, 0.0941176, 1 )
+ground_horizon_color = Color( 0.509804, 1, 0.976471, 1 )
+ground_curve = 1.28
+sun_color = Color( 1, 0.937255, 0.807843, 1 )
+sun_latitude = 26.0
+sun_angle_min = 4.0
+sun_angle_max = 128.0
+sun_energy = 2.94
+
+[sub_resource type="Environment" id=3]
+background_mode = 2
+background_sky = SubResource( 2 )
+fog_sun_amount = 0.54
+fog_depth_begin = 64.0
+fog_depth_end = 512.0
+fog_transmit_enabled = true
+fog_height_enabled = true
+fog_height_min = 2.0
+fog_height_max = -2.0
+tonemap_mode = 3
+tonemap_exposure = 0.7
+tonemap_white = 2.3
+ss_reflections_enabled = true
+ssao_enabled = true
+ssao_radius = 2.0
+ssao_intensity = 4.0
+ssao_radius2 = 4.0
+ssao_intensity2 = 2.0
+ssao_light_affect = 1.0
+ssao_ao_channel_affect = 1.0
+ssao_quality = 2
+ssao_edge_sharpness = 0.5
+dof_blur_far_enabled = true
+dof_blur_far_distance = 256.0
+dof_blur_far_transition = 4.0
+dof_blur_far_quality = 2
+dof_blur_near_enabled = true
+dof_blur_near_distance = 4.0
+dof_blur_near_transition = 4.0
+dof_blur_near_quality = 2
+glow_enabled = true
+glow_levels/1 = true
+glow_levels/5 = false
+glow_intensity = 0.6
+glow_strength = 0.8
+glow_bloom = 0.2
+glow_blend_mode = 1
+adjustment_brightness = 0.8
+adjustment_contrast = 0.8
+adjustment_saturation = 1.2
+
+[sub_resource type="SphereShape" id=4]
+radius = 0.5
+
+[sub_resource type="CylinderMesh" id=5]
+material = ExtResource( 6 )
+top_radius = 4.0
+bottom_radius = 2.0
+height = 12.0
+radial_segments = 32
+
+[sub_resource type="PhysicsMaterial" id=6]
+friction = 0.5
+
+[sub_resource type="CylinderShape" id=7]
+radius = 4.0
+
+[sub_resource type="PlaneMesh" id=8]
+material = ExtResource( 8 )
+size = Vector2( 64, 64 )
+subdivide_width = 32
+subdivide_depth = 32
+
+[sub_resource type="PlaneMesh" id=9]
+material = ExtResource( 9 )
+size = Vector2( 64, 64 )
+subdivide_width = 32
+subdivide_depth = 32
+
+[node name="infinite_terrain" type="Spatial"]
+script = ExtResource( 1 )
+
+[node name="sun" type="DirectionalLight" parent="."]
+transform = Transform( 0.987916, -0.154432, 0.0131529, -0.154774, -0.987462, 0.0310444, 0.00819379, -0.032705, -0.999431, 0, 24, 0 )
+light_energy = 2.0
+light_specular = 1.0
+light_bake_mode = 2
+shadow_enabled = true
+shadow_color = Color( 0.0745098, 0.180392, 0.360784, 1 )
+shadow_reverse_cull_face = true
+directional_shadow_blend_splits = true
+directional_shadow_max_distance = 1024.0
+
+[node name="clouds" parent="." instance=ExtResource( 2 )]
+transform = Transform( 64, 0, 0, 0, 1, 0, 0, 0, 64, 0, 256, 0 )
+
+[node name="player" type="KinematicBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.489365, 13.4792, 1.27139 )
+script = ExtResource( 3 )
+
+[node name="body" type="MeshInstance" parent="player"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="rot" type="Spatial" parent="player"]
+
+[node name="camera" parent="player/rot" instance=ExtResource( 5 )]
+transform = Transform( 0.999999, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, 1.33, 6.3 )
+environment = SubResource( 3 )
+
+[node name="CollisionShape" type="CollisionShape" parent="player"]
+shape = SubResource( 4 )
+
+[node name="stand" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.12448, 0 )
+mesh = SubResource( 5 )
+material/0 = null
+
+[node name="stand_body" type="StaticBody" parent="stand"]
+editor/display_folded = true
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.122473, 0 )
+physics_material_override = SubResource( 6 )
+
+[node name="CollisionShape" type="CollisionShape" parent="stand/stand_body"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.11, 0 )
+shape = SubResource( 7 )
+
+[node name="amiga_ball" parent="stand" instance=ExtResource( 7 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.58975, 6.89693, 1.10849 )
+
+[node name="OmniLight2" type="OmniLight" parent="stand/amiga_ball"]
+light_energy = 8.0
+shadow_enabled = true
+omni_range = 12.0
+omni_attenuation = 2.46229
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 30.2687, 12.764, -25.258 )
+visible = false
+mesh = SubResource( 8 )
+material/0 = null
+
+[node name="MeshInstance3" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -33.7313, 12.764, -25.258 )
+visible = false
+mesh = SubResource( 8 )
+material/0 = null
+
+[node name="MeshInstance2" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.970211, -0.242261, 0, 0.242261, 0.970211, 0, 17.13, -18.92 )
+visible = false
+mesh = SubResource( 9 )
+material/0 = null
