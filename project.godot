@@ -21,7 +21,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Godot Infinite Terrain / PC / GLES3 / 1.44MB"
-run/main_scene="res://scenes/big/infinite_terrain.tscn"
+run/main_scene="res://scenes/big/intro.tscn"
 boot_splash/bg_color=Color( 0.188235, 0.0784314, 0.290196, 1 )
 
 [autoload]

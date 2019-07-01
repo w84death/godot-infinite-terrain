@@ -1,0 +1,109 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://code/main.gd" type="Script" id=1]
+[ext_resource path="res://scenes/small/camera.tscn" type="PackedScene" id=2]
+[ext_resource path="res://flat_env.tres" type="Environment" id=3]
+[ext_resource path="res://scenes/small/P1X.tscn" type="PackedScene" id=4]
+
+[sub_resource type="Animation" id=1]
+resource_name = "intro"
+length = 7.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("camera/P1X:translation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 1, 7 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 4 ), Vector3( 0, 0, -2 ), Vector3( 0, 0, -2 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("sun:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 7 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( -14.793, -19.382, 0 ), Vector3( 14, 31.278, 0 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("sun:light_energy")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 4.5, 7 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 1.0, 1.0, 0.0 ]
+}
+tracks/3/type = "method"
+tracks/3/path = NodePath(".")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 7 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "next_scene"
+} ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("camera:environment:background_energy")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 0.9, 5.5 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 1.0, 0.0 ]
+}
+
+[node name="intro" type="Spatial"]
+script = ExtResource( 1 )
+next_scene_bigfile = "infinite_terrain"
+
+[node name="main" type="AnimationPlayer" parent="."]
+autoplay = "intro"
+anims/intro = SubResource( 1 )
+
+[node name="sun" type="DirectionalLight" parent="."]
+transform = Transform( 0.943326, 0.0847343, -0.320865, 0, 0.966855, 0.255328, 0.331865, -0.240858, 0.91206, 0, 7, 0 )
+light_color = Color( 0.984314, 1, 0.839216, 1 )
+light_bake_mode = 2
+
+[node name="camera" parent="." instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+environment = ExtResource( 3 )
+fov = 110.0
+
+[node name="effects" parent="camera" index="0"]
+transform = Transform( 1, 0, 0, 4.65661e-10, 1, 0, 0, 1.49012e-08, 1, 0, 0, -0.35 )
+
+[node name="P1X" parent="camera" instance=ExtResource( 4 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4 )
+
+[node name="P" parent="camera/P1X" index="0"]
+editor/display_folded = true
+
+[node name="1" parent="camera/P1X" index="1"]
+editor/display_folded = true
+
+[node name="X" parent="camera/P1X" index="2"]
+editor/display_folded = true
+
+[editable path="camera"]
+
+[editable path="camera/P1X"]
