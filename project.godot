@@ -30,8 +30,8 @@ soundtrack_player="*res://music/soundtrack_player.tscn"
 
 [display]
 
-window/size/width=1920
-window/size/height=1080
+window/size/width=1280
+window/size/height=548
 window/size/fullscreen=true
 window/stretch/mode="viewport"
 window/stretch/aspect="keep"
@@ -70,7 +70,13 @@ move_jump={
 
 [rendering]
 
+quality/driver/fallback_to_gles2=true
 threads/thread_model=2
-quality/shadows/filter_mode=2
-quality/filters/msaa=3
+quality/directional_shadow/size=2048
+quality/shadow_atlas/size=2048
+quality/reflections/texture_array_reflections=false
+quality/reflections/high_quality_ggx=false
+quality/subsurface_scattering/quality=0
+quality/voxel_cone_tracing/high_quality=false
+quality/depth/hdr=false
 environment/default_environment="res://default_env.tres"
