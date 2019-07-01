@@ -6,6 +6,8 @@ const MAX_SPEED = 24
 const JUMP_SPEED = 18
 const ACCEL = 4.5
 
+export var flying = false
+
 var dir = Vector3()
 
 const DEACCEL= 16
@@ -44,7 +46,14 @@ func process_input(delta):
     if Input.is_action_pressed("move_right"):
         input_movement_vector.x += 1
 
-    
+    if Input.is_action_just_pressed("move_up"):
+        input_movement_vector.y += 1
+
+    if Input.is_action_just_pressed("move_down"):
+        input_movement_vector.y -= 1
+
+    if Input.is_action_just_pressed("fly"):
+        flying = not flying
 
     input_movement_vector = input_movement_vector.normalized()
 
@@ -71,7 +80,8 @@ func process_movement(delta):
     dir.y = 0
     dir = dir.normalized()
 
-    vel.y += delta * GRAVITY
+    if not flying:
+       vel.y += delta * GRAVITY
 
     var hvel = vel
     hvel.y = 0

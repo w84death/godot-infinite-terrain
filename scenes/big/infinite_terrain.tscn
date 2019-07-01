@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://code/infinite_terrain.gd" type="Script" id=1]
 [ext_resource path="res://code/main.gd" type="Script" id=2]
@@ -6,12 +6,13 @@
 [ext_resource path="res://code/camera_movement.gd" type="Script" id=4]
 [ext_resource path="res://materials/sand_blocks.material" type="Material" id=5]
 [ext_resource path="res://scenes/small/camera.tscn" type="PackedScene" id=6]
-[ext_resource path="res://materials/green.material" type="Material" id=7]
-[ext_resource path="res://scenes/small/amiga_ball.tscn" type="PackedScene" id=8]
-[ext_resource path="res://scenes/small/P1X.tscn" type="PackedScene" id=9]
-[ext_resource path="res://scenes/small/fdd.tscn" type="PackedScene" id=10]
-[ext_resource path="res://materials/water2.material" type="Material" id=11]
-[ext_resource path="res://materials/terrain_grass.material" type="Material" id=12]
+[ext_resource path="res://scenes/small/spaceship.tscn" type="PackedScene" id=7]
+[ext_resource path="res://materials/green.material" type="Material" id=8]
+[ext_resource path="res://scenes/small/amiga_ball.tscn" type="PackedScene" id=9]
+[ext_resource path="res://scenes/small/P1X.tscn" type="PackedScene" id=10]
+[ext_resource path="res://scenes/small/fdd.tscn" type="PackedScene" id=11]
+[ext_resource path="res://materials/water2.material" type="Material" id=12]
+[ext_resource path="res://materials/terrain_grass.material" type="Material" id=13]
 
 [sub_resource type="SphereMesh" id=1]
 material = ExtResource( 5 )
@@ -24,8 +25,8 @@ rings = 16
 sky_top_color = Color( 0.203922, 0.376471, 0.545098, 1 )
 sky_horizon_color = Color( 0.764706, 1, 0.996078, 1 )
 ground_bottom_color = Color( 0.321569, 0.65098, 0.0941176, 1 )
-ground_horizon_color = Color( 0.509804, 1, 0.976471, 1 )
-ground_curve = 1.28
+ground_horizon_color = Color( 0.27451, 0.423529, 0.164706, 1 )
+ground_curve = 0.226274
 sun_color = Color( 1, 0.937255, 0.807843, 1 )
 sun_latitude = 26.0
 sun_angle_min = 4.0
@@ -76,8 +77,25 @@ adjustment_saturation = 1.2
 [sub_resource type="SphereShape" id=4]
 radius = 0.5
 
+[sub_resource type="Animation" id=10]
+resource_name = "fake fly"
+length = 3.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.4, 1, 2.1, 2.7 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 2.87 ), Vector3( -0.41, 0.42, 0.502 ), Vector3( 0, 0, -3.05 ), Vector3( 0.44, -0.86, 0.206 ), Vector3( 0.147, -0.627, 1.772 ) ]
+}
+
 [sub_resource type="CylinderMesh" id=5]
-material = ExtResource( 7 )
+material = ExtResource( 8 )
 top_radius = 4.0
 bottom_radius = 2.0
 height = 12.0
@@ -90,13 +108,13 @@ friction = 0.5
 radius = 4.0
 
 [sub_resource type="PlaneMesh" id=8]
-material = ExtResource( 11 )
+material = ExtResource( 12 )
 size = Vector2( 64, 64 )
 subdivide_width = 32
 subdivide_depth = 32
 
 [sub_resource type="PlaneMesh" id=9]
-material = ExtResource( 12 )
+material = ExtResource( 13 )
 size = Vector2( 64, 64 )
 subdivide_width = 32
 subdivide_depth = 32
@@ -121,10 +139,12 @@ next_scene_bigfile = "intro"
 transform = Transform( 16, 0, 0, 0, 1, 0, 0, 0, 16, 0, 256, 0 )
 
 [node name="player" type="KinematicBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.489365, 13.4792, 1.27139 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15.05, 18.45 )
 script = ExtResource( 4 )
+flying = true
 
 [node name="body" type="MeshInstance" parent="player"]
+visible = false
 mesh = SubResource( 1 )
 material/0 = null
 
@@ -136,6 +156,13 @@ environment = SubResource( 3 )
 
 [node name="CollisionShape" type="CollisionShape" parent="player"]
 shape = SubResource( 4 )
+
+[node name="spaceship" parent="player" instance=ExtResource( 7 )]
+transform = Transform( 0.999945, -0.0076739, -0.00719068, 0.00766191, 0.999969, -0.00169297, 0.00720345, 0.00163778, 0.999973, 0, -1.67, -6.3 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="player/spaceship"]
+autoplay = "fake fly"
+"anims/fake fly" = SubResource( 10 )
 
 [node name="stand" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.12448, 0 )
@@ -151,7 +178,7 @@ physics_material_override = SubResource( 6 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.11, 0 )
 shape = SubResource( 7 )
 
-[node name="amiga_ball" parent="stand" instance=ExtResource( 8 )]
+[node name="amiga_ball" parent="stand" instance=ExtResource( 9 )]
 editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.58975, 6.89693, 1.10849 )
 
@@ -161,7 +188,7 @@ shadow_enabled = true
 omni_range = 12.0
 omni_attenuation = 2.46229
 
-[node name="amiga_ball2" parent="stand" instance=ExtResource( 8 )]
+[node name="amiga_ball2" parent="stand" instance=ExtResource( 9 )]
 editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.58975, 6.89693, 2.10849 )
 
@@ -171,7 +198,7 @@ shadow_enabled = true
 omni_range = 12.0
 omni_attenuation = 2.46229
 
-[node name="amiga_ball3" parent="stand" instance=ExtResource( 8 )]
+[node name="amiga_ball3" parent="stand" instance=ExtResource( 9 )]
 editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.58975, 6.89693, 2.10849 )
 
@@ -181,7 +208,7 @@ shadow_enabled = true
 omni_range = 12.0
 omni_attenuation = 2.46229
 
-[node name="amiga_ball4" parent="stand" instance=ExtResource( 8 )]
+[node name="amiga_ball4" parent="stand" instance=ExtResource( 9 )]
 editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.58975, 6.89693, 1.10849 )
 
@@ -191,10 +218,10 @@ shadow_enabled = true
 omni_range = 12.0
 omni_attenuation = 2.46229
 
-[node name="P1X" parent="stand" instance=ExtResource( 9 )]
+[node name="P1X" parent="stand" instance=ExtResource( 10 )]
 transform = Transform( 2, 0, 0, 0, -8.74228e-08, 2, 0, -2, -8.74228e-08, 0, 6.05, 0 )
 
-[node name="fdd" parent="stand" instance=ExtResource( 10 )]
+[node name="fdd" parent="stand" instance=ExtResource( 11 )]
 transform = Transform( 0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.5, 0, 9.85, 0 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
